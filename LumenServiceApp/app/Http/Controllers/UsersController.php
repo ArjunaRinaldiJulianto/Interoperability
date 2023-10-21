@@ -10,7 +10,7 @@ class UsersController extends Controller
     {
         //
     }
-    
+    // Tugas Pertemuan 3
     // 2. Silahkan anda membuat routing seperti dibawah ini.
     public function getStatus()
     {

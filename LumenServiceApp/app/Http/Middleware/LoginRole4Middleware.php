@@ -3,6 +3,7 @@ namespace App\Http\Middleware;
 use Closure;
 class LoginRole4Middleware
 {
+    // Tugas Pertemuan 3
     public function handle($request, Closure $next)
     {
         if (!($request->input('username') == 'pegawai' && $request->input('password') == 'pegawai')) {

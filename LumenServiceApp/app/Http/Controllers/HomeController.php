@@ -10,6 +10,8 @@ class HomeController extends Controller
     {
         //
     }
+    // Tugas Pertemuan 3
+    // 1.	Silahkan membuat 5 routing, 5 middleware dan 5 controller dengan kasus yang berbeda.
     public function index()
     {
         return '<h1>Selamat Datang</h1> <br> <h3>Ini Adalah Halaman Home</h3>';

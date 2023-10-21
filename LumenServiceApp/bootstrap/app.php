@@ -23,6 +23,8 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
+// Tugas Pertemuan 4
+// Silahkan membuat 5 migration untuk membuat 5 table kemudian implementasikan dengan lumen.
 $app->withFacades();
 
 $app->withEloquent();
@@ -76,6 +78,8 @@ $app->configure('app');
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
+// Tugas Pertemuan 3
+// 1.	Silahkan membuat 5 routing, 5 middleware dan 5 controller dengan kasus yang berbeda.
 $app->routeMiddleware([
     // 'auth' => App\Http\Middleware\Authenticate::class,
     'login' => App\Http\Middleware\LoginMiddleware::class,

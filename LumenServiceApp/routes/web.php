@@ -17,6 +17,7 @@
 //     return $router->app->version();
 // });
 
+// Latihan Pertemuan 3
 $router->get('/hello-lumen', function() {
     return "<h1>Lumen</h1><p>Hi good developer, thank for useing Lumen</p>";
 });
@@ -28,6 +29,7 @@ $router->get('/scores', ['middleware' => 'login', function () {
 }]);
 $router->get('/user', 'UserController@index');
 
+// Tugas Pertemuan 3
 // 1.	Silahkan membuat 5 routing, 5 middleware dan 5 controller dengan kasus yang berbeda.
 // 5 routing middleware
 $router->get('/direktur', ['middleware' => 'login.role0', function () { 
@@ -54,8 +56,16 @@ $router->get('/profile', 'ProfileController@profile');
 $router->get('/produk', 'ProdukController@getProduk');
 $router->get('/produk/{produkId}', 'ProdukSearchController@getProdukById');
 
-
 // 2. Silahkan anda membuat routing seperti dibawah ini.
 $router->get('/', 'UsersController@getStatus');
 $router->get('/users', 'UsersController@getUsers');
 $router->get('/users/{userId}', 'UsersController@getUsersById');
+
+
+// Tugas Pertemuan 4
+// Silahkan membuat 5 migration untuk membuat 5 table kemudian implementasikan dengan lumen.
+$router->get('/posts', 'PostsController@index');
+$router->get('/category','CategoriesController@index');
+$router->get('/tag','TagsController@index');
+$router->get('/product','ProductsController@index');
+$router->get('/order', 'OrdersController@index');

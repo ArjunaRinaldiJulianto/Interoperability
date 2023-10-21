@@ -10,6 +10,8 @@ class AboutController extends Controller
     {
         //
     }
+    // Tugas Pertemuan 3
+    // 1.	Silahkan membuat 5 routing, 5 middleware dan 5 controller dengan kasus yang berbeda.
     public function about()
     {
         return response()->json([
