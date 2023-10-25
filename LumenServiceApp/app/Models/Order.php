@@ -15,4 +15,9 @@ class Order extends Model{
     protected $fillable = [
         'user_id', 'order_number', 'total_amount', 'is_paid', 'shipping_address', 'payment_method'
     ];
+
+    // Tugas Pertemuan 5
+    //1.	Silahkan membuat 5 CRUD dengan mengimplementasikan Restful Design API dengan lumen.
+    //2.	Satu CRUD, minimal menggunakan 7 fields + field created_at dan updated_at.
+    public $timestamps = true;
 }

@@ -12,5 +12,12 @@ class Product extends Model{
     // protected $table = 'table_name';
 
     // define column name
-    protected $fillable = ["name", "description", "price", "quantity"];
+    // protected $fillable = ["name", "description", "price", "quantity"];
+
+    // Tugas Pertemuan 5
+    //1.	Silahkan membuat 5 CRUD dengan mengimplementasikan Restful Design API dengan lumen.
+    //2.	Satu CRUD, minimal menggunakan 7 fields + field created_at dan updated_at.
+    protected $fillable = ["name", "category", "slug", "description", "price", "stock"];
+
+    public $timestamps = true;
 }
