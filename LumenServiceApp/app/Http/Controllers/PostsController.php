@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PostsController extends Controller
 {
@@ -15,15 +16,47 @@ class PostsController extends Controller
     public function index(Request $request){
         $acceptHeader = $request->header('Accept');
 
+        // $posts = Post::OrderBy("id", "DESC")->paginate(2)->toArray();
+        // $response = [
+        //     "total_count" => $posts["total"],
+        //     "limit" => $posts["per_page"],
+        //     "pagination" => [
+        //         "next_page" => $posts["next_page_url"],
+        //         "current_page" => $posts["current_page"]
+        //     ],
+        //     "data" => $posts["data"],
+        // ];
+
+        $posts = Post::OrderBy("id", "DESC")->paginate(2);
+        $response = [
+            "total_count" => $posts->total(),
+            "limit" => $posts->perPage(),
+            "pagination" => [
+                "next_page" => $posts->nextPageUrl(),
+                "current_page" => $posts->currentPage()
+            ],
+            "data" => $posts->items(),
+        ];
+
         if($acceptHeader === 'application/json' || $acceptHeader === 'application/xml'){
-            $posts = Post::OrderBy("id", "DESC")->paginate(10);
+            // $posts = Post::OrderBy("id", "DESC")->paginate(10); // Tugas Pertemuan 6
 
             if($acceptHeader === 'application/json'){
-                return response()->json($posts->items('data'), 200);
+                return response()->json($response, 200); // Tugas Pertemuan 7
+                // return response()->json($posts->items('data'), 200); // Tugas Pertemuan 6
             } else {
                 $xml = new \SimpleXMLElement('<posts/>');
 
-                foreach($posts->items('data') as $item){
+                // Tugas Pertemuan 7
+                $responseElement = $xml->addChild('response');
+                $responseElement->addChild('total_count', $response['total_count']);
+                $responseElement->addChild('limit', $response['limit']);
+                $paginationElement = $responseElement->addChild('pagination');
+                $paginationElement->addChild('next_page', $response['pagination']['next_page']);
+                $paginationElement->addChild('current_page', $response['pagination']['current_page']);
+
+                // foreach($posts->items('data') as $item){ // Tugas Pertemuan 6
+                foreach($posts->items() as $item){
                     $xmlItem = $xml->addChild('post');
 
                     $xmlItem->addChild('id', $item->id);
@@ -36,7 +69,8 @@ class PostsController extends Controller
                     $xmlItem->addChild('updated_at', $item->updated_at);
                 }
 
-                return $xml->asXML();
+                return response($xml->asXML(), 200);
+                // return $xml->asXML(); // Tugas Pertemuan 6
             }
             
         } else {
@@ -51,7 +85,22 @@ class PostsController extends Controller
 
             if($contentTypeHeader === 'application/json'){
                 $input = $request->all();
-                $post = Post::create($input);
+
+                // Tugas Pertemuan 7
+                $validator = Validator::make($input, [
+                    'author' => 'required|min:5',
+                    'views' => 'required|numeric',
+                    'title' => 'required|min:5',
+                    'status' => 'required|in:draft,published',
+                    'content' => 'required|min:5',
+                    'user_id' => 'required|numeric'
+                ]);
+
+                if($validator->fails()){
+                    return response()->json($validator->errors(), 400);
+                }
+                
+                $post = Post::create($input); // Tugas Pertemuan 6
 
                 return response()->json($post,200);
             } else if ($contentTypeHeader === 'application/xml'){
@@ -120,7 +169,21 @@ class PostsController extends Controller
                     abort(404);
                 }
 
-                $post->fill($input);
+                // Tugas Pertemuan 7
+                $validator = Validator::make($input, [
+                    'author' => 'required|min:5',
+                    'views' => 'required|numeric',
+                    'title' => 'required|min:5',
+                    'status' => 'required|in:draft,published',
+                    'content' => 'required|min:5',
+                    'user_id' => 'required|numeric'
+                ]);
+
+                if($validator->fails()){
+                    return response()->json($validator->errors(), 400);
+                }
+
+                $post->fill($input); // Tugas Pertemuan 6
                 $post->save();
 
                 return response()->json($post,200);
