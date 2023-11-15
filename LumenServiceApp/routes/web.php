@@ -74,11 +74,11 @@ $router->get('/tag','TagsController@index');
 // Tugas Pertemuan 5
 //1.	Silahkan membuat 5 CRUD dengan mengimplementasikan Restful Design API dengan lumen.
 //2.	Satu CRUD, minimal menggunakan 7 fields + field created_at dan updated_at.
-$router->get('/posts', 'PostsController@index');
-$router->post('/posts', 'PostsController@store');
-$router->get('/posts/{id}', 'PostsController@show');
-$router->put('/posts/{id}', 'PostsController@update');
-$router->delete('/posts/{id}', 'PostsController@destroy');
+// $router->get('/posts', 'PostsController@index');
+// $router->post('/posts', 'PostsController@store');
+// $router->get('/posts/{id}', 'PostsController@show');
+// $router->put('/posts/{id}', 'PostsController@update');
+// $router->delete('/posts/{id}', 'PostsController@destroy');
 
 $router->get('/product','ProductsController@index');
 $router->post('/product','ProductsController@store');
@@ -103,3 +103,17 @@ $router->post('/seller', 'SellersController@store');
 $router->get('/seller/{id}', 'SellersController@show');
 $router->put('/seller/{id}', 'SellersController@update');
 $router->delete('/seller/{id}', 'SellersController@destroy');
+
+// Tugas Pertemuan 8
+$router->group(['prefix' => 'auth'], function () use ($router) {
+    $router->post('register', 'AuthController@register');
+    $router->post('login', 'AuthController@login');
+});
+
+Route::group(['middleware' => 'auth'], function () use ($router) {
+    $router->get('/posts', 'PostsController@index');
+    $router->post('/posts', 'PostsController@store');
+    $router->get('/posts/{id}', 'PostsController@show');
+    $router->put('/posts/{id}', 'PostsController@update');
+    $router->delete('/posts/{id}', 'PostsController@destroy');
+});

@@ -78,16 +78,16 @@ $app->configure('app');
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-// Tugas Pertemuan 3
-// 1.	Silahkan membuat 5 routing, 5 middleware dan 5 controller dengan kasus yang berbeda.
 $app->routeMiddleware([
-    // 'auth' => App\Http\Middleware\Authenticate::class,
-    'login' => App\Http\Middleware\LoginMiddleware::class,
-    'login.role0' => App\Http\Middleware\LoginRole0Middleware::class,
-    'login.role1' => App\Http\Middleware\LoginRole1Middleware::class,
-    'login.role2' => App\Http\Middleware\LoginRole2Middleware::class,
-    'login.role3' => App\Http\Middleware\LoginRole3Middleware::class,
-    'login.role4' => App\Http\Middleware\LoginRole4Middleware::class,
+    'auth' => App\Http\Middleware\Authenticate::class,
+    // Tugas Pertemuan 3
+    // 1.	Silahkan membuat 5 routing, 5 middleware dan 5 controller dengan kasus yang berbeda.
+    // 'login' => App\Http\Middleware\LoginMiddleware::class,
+    // 'login.role0' => App\Http\Middleware\LoginRole0Middleware::class,
+    // 'login.role1' => App\Http\Middleware\LoginRole1Middleware::class,
+    // 'login.role2' => App\Http\Middleware\LoginRole2Middleware::class,
+    // 'login.role3' => App\Http\Middleware\LoginRole3Middleware::class,
+    // 'login.role4' => App\Http\Middleware\LoginRole4Middleware::class,
 ]);
 
 /*
@@ -102,9 +102,10 @@ $app->routeMiddleware([
 */
 
 // $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
+$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
