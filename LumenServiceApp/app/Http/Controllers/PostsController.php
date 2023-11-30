@@ -6,6 +6,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class PostsController extends Controller
 {
@@ -14,6 +15,12 @@ class PostsController extends Controller
     // 2. Implementasi Accept Header pada function show, update, delete.
     // 3. Implementasi Content-Type Header pada function update.
 
+    /**
+     * Display a listing of the resource.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function index(Request $request){
         $acceptHeader = $request->header('Accept');
 
@@ -29,16 +36,44 @@ class PostsController extends Controller
         // ];
 
         // $posts = Post::OrderBy("id", "DESC")->paginate(2); // Tugas Pertemuan 7
-        $posts = Post::Where(['user_id' => Auth::user()->id])->OrderBy("id", "DESC")->paginate(2); // Tugas Pertemuan 8
+        
+        // authorization
+        // check if current user is authorized to do this action
+        if (Gate::denies('read-post')){
+            return response()->json([
+                'success' => false,
+                'status' => 403,
+                'message' => 'You are unauthorized'
+            ], 403);
+        }
+        
+        if(Auth::user()->role === 'admin'){
+            $posts = Post::OrderBy("id", "DESC")->paginate(2)->toArray();
+        } else {
+            $posts = Post::Where(['user_id' => Auth::user()->id])->OrderBy("id", "DESC")->paginate(2)->toArray();
+        }
+        // authorization end
+        
         $response = [
-            "total_count" => $posts->total(),
-            "limit" => $posts->perPage(),
+            "total_count" => $posts["total"],
+            "limit" => $posts["per_page"],
             "pagination" => [
-                "next_page" => $posts->nextPageUrl(),
-                "current_page" => $posts->currentPage()
+                "next_page" => $posts["next_page_url"],
+                "current_page" => $posts["current_page"]
             ],
-            "data" => $posts->items(),
+            "data" => $posts["data"],
         ];
+        
+        // $posts = Post::Where(['user_id' => Auth::user()->id])->OrderBy("id", "DESC")->paginate(2); // Tugas Pertemuan 8
+        // $response = [
+        //     "total_count" => $posts->total(),
+        //     "limit" => $posts->perPage(),
+        //     "pagination" => [
+        //         "next_page" => $posts->nextPageUrl(),
+        //         "current_page" => $posts->currentPage()
+        //     ],
+        //     "data" => $posts->items(),
+        // ];
 
         if($acceptHeader === 'application/json' || $acceptHeader === 'application/xml'){
             // $posts = Post::OrderBy("id", "DESC")->paginate(10); // Tugas Pertemuan 6
@@ -79,8 +114,26 @@ class PostsController extends Controller
             return response('Not Acceptable!', 406);
         }
     }
+
+    /**
+     * Store a newly created resource in storage.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request){
         $acceptHeader = $request->header('Accept');
+
+        // authorization
+        // check if current user is authorized to do this action
+        if (Gate::denies('create-post')){
+            return response()->json([
+                'success' => false,
+                'status' => 403,
+                'message' => 'You are unauthorized'
+            ], 403);
+        }
+        // authorization end
 
         if($acceptHeader === 'application/json' || $acceptHeader === 'application/xml'){
             $contentTypeHeader = $request->header('Content-Type');
@@ -125,6 +178,14 @@ class PostsController extends Controller
             return response('Not Acceptable!', 406);
         }
     }
+
+    /**
+     * Display the specified resource.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
     public function show(Request $request, $id){
         $acceptHeader = $request->header('Accept');
 
@@ -134,6 +195,17 @@ class PostsController extends Controller
             if(!$post){
                 abort(404);
             }
+
+            // authorization
+            // check if current user is authorized to do this action
+            if (Gate::denies('show-post', $post)){
+                return response()->json([
+                    'success' => false,
+                    'status' => 403,
+                    'message' => 'You are unauthorized'
+                ], 403);
+            }
+            // authorization end
 
             if($acceptHeader === 'application/json'){
                 return response()->json($post,200);
@@ -157,6 +229,14 @@ class PostsController extends Controller
             return response('Not Acceptable!', 406);
         }
     }
+
+    /**
+     * Update the specified resource in storage.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
     public function update(Request $request, $id){
         $acceptHeader = $request->header('Accept');
 
@@ -170,6 +250,17 @@ class PostsController extends Controller
                 if(!$post){
                     abort(404);
                 }
+
+                // authorization
+                // check if current user is authorized to do this action
+                if (Gate::denies('update-post', $post)){
+                    return response()->json([
+                        'success' => false,
+                        'status' => 403,
+                        'message' => 'You are unauthorized'
+                    ], 403);
+                }
+                // authorization end
 
                 // Tugas Pertemuan 7
                 $validator = Validator::make($input, [
@@ -216,6 +307,14 @@ class PostsController extends Controller
             return response('Not Acceptable!', 406);
         }
     }
+
+    /**
+     * Remove the specified resource from storage.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
     public function destroy(Request $request, $id){
         $acceptHeader = $request->header('Accept');
 
@@ -225,6 +324,17 @@ class PostsController extends Controller
             if(!$post){
                 abort(404);
             }
+
+            // authorization
+            // check if current user is authorized to do this action
+            if (Gate::denies('delete-post', $post)){
+                return response()->json([
+                    'success' => false,
+                    'status' => 403,
+                    'message' => 'You are unauthorized'
+                ], 403);
+            }
+            // authorization end
 
             $post->delete();
             $message = ['message' => 'deleted successfully', 'post_id' => $id];

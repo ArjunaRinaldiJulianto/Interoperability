@@ -117,3 +117,6 @@ Route::group(['middleware' => 'auth'], function () use ($router) {
     $router->put('/posts/{id}', 'PostsController@update');
     $router->delete('/posts/{id}', 'PostsController@destroy');
 });
+
+$router->get('/public/posts', 'PublicController\PostsController@index');
+$router->get('/public/posts/{id}', 'PublicController\PostsController@show');

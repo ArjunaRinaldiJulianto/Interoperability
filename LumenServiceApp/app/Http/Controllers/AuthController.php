@@ -19,7 +19,8 @@ class AuthController extends Controller{
         $validator = Validator::make($input, [
             'name' => 'required|string',
             'email' => 'required|email|unique:users|string',
-            'password' => 'required|confirmed|string'
+            'password' => 'required|confirmed|string',
+            'role' => 'required|in:reader,editor,admin'
         ]);
 
         if ($validator->fails()) {
@@ -29,7 +30,8 @@ class AuthController extends Controller{
         $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
-            'password' => app('hash')->make($input['password'])
+            'password' => app('hash')->make($input['password']),
+            'role' => $input['role']
         ]);
 
         return response()->json($user, 200);
