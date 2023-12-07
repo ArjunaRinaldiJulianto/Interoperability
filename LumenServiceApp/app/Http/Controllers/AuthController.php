@@ -20,7 +20,7 @@ class AuthController extends Controller{
             'name' => 'required|string',
             'email' => 'required|email|unique:users|string',
             'password' => 'required|confirmed|string',
-            'role' => 'required|in:reader,editor,admin'
+            // 'role' => 'required|in:reader,editor,admin'
         ]);
 
         if ($validator->fails()) {
@@ -31,7 +31,7 @@ class AuthController extends Controller{
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => app('hash')->make($input['password']),
-            'role' => $input['role']
+            // 'role' => $input['role']
         ]);
 
         return response()->json($user, 200);

@@ -8,6 +8,11 @@ use App\Models\Post;
 
 class PostsController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         $posts = Post::OrderBy("id", "ASC")->paginate(10)->toArray();
@@ -23,9 +28,20 @@ class PostsController extends Controller
 
         return response()->json($response, 200);
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response 
+     */
     public function show($id)
     {
-        $post = Post::find($id);
+        // $post = Post::find($id);
+        $post = Post::with(['user' => function($query){
+            $query->select('id','name');
+        }])->find($id);
+
         if(!$post){
             abort(404);
         }

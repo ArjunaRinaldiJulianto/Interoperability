@@ -21,4 +21,8 @@ class Post extends Model{
     protected $fillable = ['author','views','title','status','content','user_id'];
 
     public $timestamps = true;
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

@@ -35,6 +35,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public $timestamps = true;
 
+    public function post(){
+        return $this->hasMany(Post::class);
+    }
+
     /**
      * JWT implementation
      * Get the identifier that will be stored in the subject claim of the JWT.
