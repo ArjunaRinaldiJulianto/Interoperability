@@ -18,7 +18,7 @@ class Post extends Model{
     // Tugas Pertemuan 5
     //1.	Silahkan membuat 5 CRUD dengan mengimplementasikan Restful Design API dengan lumen.
     //2.	Satu CRUD, minimal menggunakan 7 fields + field created_at dan updated_at.
-    protected $fillable = ['author','views','title','status','content','user_id'];
+    protected $fillable = ['author','views','title','status','content', 'image', 'video', 'user_id'];
 
     public $timestamps = true;
 

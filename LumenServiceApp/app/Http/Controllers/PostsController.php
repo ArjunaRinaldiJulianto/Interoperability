@@ -135,10 +135,10 @@ class PostsController extends Controller
         }
         // authorization end
 
-        if($acceptHeader === 'application/json' || $acceptHeader === 'application/xml'){
-            $contentTypeHeader = $request->header('Content-Type');
+        if($acceptHeader === 'application/json' /*|| $acceptHeader === 'application/xml'*/){
+            // $contentTypeHeader = $request->header('Content-Type');
 
-            if($contentTypeHeader === 'application/json'){
+            // if($contentTypeHeader === 'application/json'){
                 $input = $request->all();
 
                 // Tugas Pertemuan 7
@@ -157,23 +157,53 @@ class PostsController extends Controller
                 
                 $post = Post::create($input); // Tugas Pertemuan 6
 
+                if ($request->hasFile('image')) {
+                    $firName = str_replace(' ', '_', $input['title']);
+
+                    $imgName = $post->id . '_' . $firName . '_' . 'image';
+                    $request->file('image')->move(storage_path('uploads/image_posts'), $imgName);
+
+                    // Delete the previous image
+                    $current_image_path = storage_path('uploads/image_posts') . '/' . $post->image;
+                    if (file_exists($current_image_path)) {
+                        unlink($current_image_path);
+                    }
+
+                    $post->image = $imgName;
+                }
+
+                if ($request->hasFile('video')) {
+                    $firName = str_replace(' ', '_', $input['title']);
+
+                    $vidName = $post->id . '_' . $firName . '_' . 'video';
+                    $request->file('video')->move(storage_path('uploads/video_posts'), $vidName);
+
+                    // Delete the previous video
+                    $current_video_path = storage_path('uploads/video_posts') . '/' . $post->video;
+                    if (file_exists($current_video_path)) {
+                        unlink($current_video_path);
+                    }
+
+                    $post->video = $vidName;
+                }
+
                 return response()->json($post,200);
-            } else if ($contentTypeHeader === 'application/xml'){
-                $xml = new \SimpleXMLElement($request->getContent());
+            // } else if ($contentTypeHeader === 'application/xml'){
+            //     $xml = new \SimpleXMLElement($request->getContent());
 
-                $post = Post::create([
-                    'author' => $xml->author,
-                    'views' => $xml->views,
-                    'title' => $xml->title,
-                    'status' => $xml->status,
-                    'content' => $xml->content,
-                    'user_id' => $xml->user_id
-                ]);
+            //     $post = Post::create([
+            //         'author' => $xml->author,
+            //         'views' => $xml->views,
+            //         'title' => $xml->title,
+            //         'status' => $xml->status,
+            //         'content' => $xml->content,
+            //         'user_id' => $xml->user_id
+            //     ]);
 
-                return response($post, 200);
-            } else {
-                return response('Unsupported Media Type', 415);
-            }
+            //     return response($post, 200);
+            // } else {
+            //     return response('Unsupported Media Type', 415);
+            // }
         } else {
             return response('Not Acceptable!', 406);
         }
@@ -351,6 +381,22 @@ class PostsController extends Controller
             }
         } else {
             return response('Not Acceptable!', 406);
+        }
+    }
+
+    public function image($imageName){
+        $imagePath = storage_path('uploads/image_posts') . '/' . $imageName;
+        if (file_exists($imagePath)) {
+            $file = file_get_contents($imagePath);
+            return response($file, 200)->header('Content-Type', 'image/jpeg');
+        }
+    }
+
+    public function video($videoName){
+        $videoPath = storage_path('uploads/video_posts') . '/' . $videoName;
+        if (file_exists($videoPath)) {
+            $file = file_get_contents($videoPath);
+            return response($file, 200)->header('Content-Type', 'video/mp4');
         }
     }
     
