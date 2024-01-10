@@ -209,13 +209,6 @@ class PostsController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     * 
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function show(Request $request, $id){
         $acceptHeader = $request->header('Accept');
 
@@ -338,13 +331,7 @@ class PostsController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * 
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Request $request, $id){
         $acceptHeader = $request->header('Accept');
 

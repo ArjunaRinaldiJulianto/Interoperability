@@ -19,3 +19,6 @@ $router->get('/', function () use ($router) {
 
 $router->get('/posts/get-request-json', 'PostsController@getRequestsJson');
 $router->get('/posts/get-request-json/{id}', 'PostsController@getRequestsJsonById');
+
+$router->get('/posts/get-request-xml', 'PostsController@getRequestsXml');
+$router->get('/posts/get-request-xml/{id}', 'PostsController@getRequestsXmlById');
