@@ -3,9 +3,38 @@
 namespace App\Http\Controllers\PublicController;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Post;
 
+/**
+ * @OA\Get(
+ *   path="/public/posts",
+ *   summary = "Get Public posts",
+ *   tags={"public/posts"},
+ *   @OA\Parameter(name="page",
+ *     in="query",
+ *     required=false,
+ *     @OA\Schema(type="number")
+ *   ),
+ *   @OA\Response(
+ *     response=200,
+ *     description="OK"
+ *   )
+ * ),
+ * @OA\Get(
+ *   path="/public/posts/{id}",
+ *   summary="Get Public Posts by id",
+ *   tags={"public/posts"},
+ *   @OA\Parameter(name="id",
+ *     in="path",
+ *     required=true,
+ *     @OA\Schema(type="number")
+ *   ),
+ *   @OA\Response(
+ *     response=200,
+ *     description="OK"
+ *   )
+ *  )
+ */
 class PostsController extends Controller
 {
     public function index()
